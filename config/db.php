@@ -177,6 +177,39 @@ DATABASE_URL = mysql://user:pass@host:3306/pocketpilot_db
     }
 }
 
+// Ensure active database is a user database and not a restricted system schema (e.g. 'sys')
+try {
+    $currDb = $pdo->query("SELECT DATABASE()")->fetchColumn();
+    if (in_array(strtolower((string)$currDb), ['sys', 'mysql', 'performance_schema', 'information_schema', ''])) {
+        $switched = false;
+        try {
+            $pdo->exec("CREATE DATABASE IF NOT EXISTS `pocketpilot_db`");
+            $pdo->exec("USE `pocketpilot_db`");
+            $switched = true;
+        } catch (Exception $e) {}
+
+        if (!$switched) {
+            try {
+                $pdo->exec("USE `test`");
+                $switched = true;
+            } catch (Exception $e) {}
+        }
+
+        if (!$switched) {
+            try {
+                $dbs = $pdo->query("SHOW DATABASES")->fetchAll(PDO::FETCH_COLUMN);
+                foreach ($dbs as $d) {
+                    if (!in_array(strtolower($d), ['sys', 'mysql', 'performance_schema', 'information_schema'])) {
+                        $pdo->exec("USE `$d`");
+                        $switched = true;
+                        break;
+                    }
+                }
+            } catch (Exception $e) {}
+        }
+    }
+} catch (Exception $e) {}
+
 // 2. Auto-initialize tables and starter data if empty (makes cloud deployments 100% zero-configuration)
 try {
     $checkTable = $pdo->query("SHOW TABLES LIKE 'transactions'")->fetch();

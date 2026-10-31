@@ -1,0 +1,74 @@
+# ==============================================================================
+# PocketPilot Production Apache Configuration (.htaccess)
+# ==============================================================================
+
+# 1. Prevent Directory Browsing
+Options -Indexes
+
+# 2. Set Default Directory Index
+DirectoryIndex index.php index.html
+
+# 3. Custom Error Pages
+ErrorDocument 404 /404.php
+
+# 4. Protect Sensitive Files & Directories from Direct Web Access
+<FilesMatch "^(\.env|\.git|\.gitignore|database\.sql|Dockerfile|docker-compose\.yml|Procfile|.*\.bat|.*\.ps1|.*\.log|README\.md|DEPLOYMENT\.md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 5. Production Security Headers
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Clickjacking protection (allow same origin)
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Cross-site scripting (XSS) filter
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Force UTF-8 character encoding
+    Header always set Content-Type "text/html; charset=UTF-8" "expr=%{CONTENT_TYPE} =~ m#^text/html#i"
+</IfModule>
+
+# 6. Gzip / Deflate Compression for Speed and Lower Bandwidth
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# 7. Browser Caching for Static Assets (CSS, JS, Fonts, Images)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
+
+# 8. Clean URL Handling (Optional mod_rewrite)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Ensure HTTPS in production if proxy sends X-Forwarded-Proto
+    RewriteCond %{HTTP:X-Forwarded-Proto} =http
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

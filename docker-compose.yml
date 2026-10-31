@@ -1,0 +1,42 @@
+services:
+  web:
+    build: .
+    container_name: pocketpilot_web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=production
+      - APP_TIMEZONE=Asia/Kolkata
+      - CURRENCY_SYMBOL=₹
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=pocketpilot_db
+      - DB_USER=pocketuser
+      - DB_PASS=pocketpass
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: pocketpilot_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=pocketpilot_db
+      - MYSQL_USER=pocketuser
+      - MYSQL_PASSWORD=pocketpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:

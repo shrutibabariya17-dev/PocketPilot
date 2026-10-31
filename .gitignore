@@ -1,0 +1,28 @@
+# Environment and local secret configuration
+.env
+.env.local
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# Editor and IDE directories
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Logs and error outputs
+*.log
+error_log
+php_errors.log
+
+# Deploy packages
+*.zip
+pocketpilot-deploy.zip
+
+# Node or Composer if ever introduced
+node_modules/
+vendor/

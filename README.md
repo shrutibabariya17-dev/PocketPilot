@@ -102,6 +102,19 @@ d:\shruti'\pr1/
 
 ---
 
+## 🌐 Deploy to Vercel (1-Click)
+
+PocketPilot includes native **Vercel** serverless configuration (`vercel.json` + `api/index.php` front-controller):
+
+1. Push to your GitHub repository: `https://github.com/shrutibabariya17-dev/PocketPilot`
+2. Go to **[vercel.com](https://vercel.com)** &rarr; **Add New Project** &rarr; **Import `PocketPilot`**.
+3. Under Project Settings &rarr; **Environment Variables**, add your cloud MySQL credentials:
+   - `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` (or `DATABASE_URL`) from any free MySQL provider (TiDB Cloud, Aiven, or Railway).
+4. Click **Deploy**! PocketPilot automatically initializes your tables on first visit.
+5. See [`VERCEL_DEPLOYMENT.md`](file:///d:/shruti'/pr1/VERCEL_DEPLOYMENT.md) for detailed instructions.
+
+---
+
 ## 🔒 Production Features Included
 
 - **Indian Rupee (`₹`) Everywhere**: Formatted with standard grouping and realistic student figures.

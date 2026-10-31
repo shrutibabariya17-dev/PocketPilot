@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.example
+*.bat
+docker-compose.yml
+Dockerfile
+Procfile
+pocketpilot-deploy.zip
+cookie.txt
+auth_cookie.txt

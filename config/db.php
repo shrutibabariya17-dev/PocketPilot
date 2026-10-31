@@ -40,8 +40,11 @@ if ($appEnv === 'production') {
     error_reporting(E_ALL);
 }
 
-// Session security
+// Session security & Serverless compatibility
 if (session_status() === PHP_SESSION_NONE) {
+    if (getenv('VERCEL') || !empty($_ENV['VERCEL']) || (function_exists('is_dir') && is_dir('/tmp'))) {
+        @ini_set('session.save_path', '/tmp');
+    }
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
     session_start();
@@ -88,9 +91,70 @@ try {
         $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
         $pdo = new PDO($dsn, $db_user, $db_pass, $options);
     } catch (PDOException $ex) {
-        // Safe production error display
-        $isLocal = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1', 'localhost']);
-        if ($isLocal) {
+        // Helpful error display for Local and Vercel deployments
+        $isVercel = getenv('VERCEL') || !empty($_ENV['VERCEL']) || strpos($_SERVER['HTTP_HOST'] ?? '', 'vercel.app') !== false;
+        $isLocal = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1', 'localhost']) && !$isVercel;
+
+        if ($isVercel) {
+            http_response_code(500);
+            ?>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Connect Database — PocketPilot on Vercel</title>
+                <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+                <style>
+                    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 2.5rem 1rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; box-sizing: border-box; }
+                    .setup-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; max-width: 620px; width: 100%; padding: 2.5rem 2rem; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08); }
+                    .badge { display: inline-flex; align-items: center; gap: 0.4rem; background: #e0e7ff; color: #4338ca; padding: 0.35rem 0.75rem; border-radius: 9999px; font-size: 0.82rem; font-weight: 700; margin-bottom: 1rem; }
+                    h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 0.5rem; color: #0f172a; }
+                    p { font-size: 0.95rem; line-height: 1.6; color: #475569; margin: 0 0 1.25rem; }
+                    .code-box { background: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: 10px; font-family: monospace; font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.5rem; overflow-x: auto; }
+                    .steps { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+                    .steps li { display: flex; gap: 0.75rem; margin-bottom: 0.85rem; font-size: 0.92rem; color: #334155; }
+                    .step-num { width: 24px; height: 24px; border-radius: 50%; background: #4f46e5; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+                    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #4f46e5; color: #ffffff; text-decoration: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
+                    .btn:hover { background: #4338ca; }
+                </style>
+            </head>
+            <body>
+                <div class="setup-card">
+                    <div class="badge"><i class="bi bi-triangle-fill" style="font-size: 0.7rem;"></i> PocketPilot Live on Vercel</div>
+                    <h1>Connect Your MySQL Database</h1>
+                    <p>PocketPilot is running on Vercel! To store student expenses and budgets, connect a free Cloud MySQL database (such as <strong>Aiven</strong>, <strong>TiDB Cloud</strong>, or <strong>Railway</strong>).</p>
+                    
+                    <ul class="steps">
+                        <li><span class="step-num">1</span> <div>Create a free MySQL database on <a href="https://aiven.io" target="_blank" style="color: #4f46e5; font-weight: 600;">Aiven</a>, <a href="https://tidbcloud.com" target="_blank" style="color: #4f46e5; font-weight: 600;">TiDB Cloud</a>, or <a href="https://railway.com" target="_blank" style="color: #4f46e5; font-weight: 600;">Railway</a>.</div></li>
+                        <li><span class="step-num">2</span> <div>Go to your <strong>Vercel Dashboard &rarr; Project Settings &rarr; Environment Variables</strong>.</div></li>
+                        <li><span class="step-num">3</span> <div>Add these variables from your cloud database:</div></li>
+                    </ul>
+
+                    <div class="code-box">
+DB_HOST = your-cloud-mysql-host<br>
+DB_PORT = 3306<br>
+DB_NAME = pocketpilot_db<br>
+DB_USER = your-database-username<br>
+DB_PASS = your-database-password<br>
+# Or simply:<br>
+DATABASE_URL = mysql://user:pass@host:3306/pocketpilot_db
+                    </div>
+
+                    <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem;">
+                        <i class="bi bi-magic" style="color: #4f46e5;"></i> PocketPilot will <strong>automatically create all tables and initial student data</strong> on your first visit!
+                    </p>
+
+                    <a href="https://vercel.com/dashboard" target="_blank" class="btn">
+                        <i class="bi bi-box-arrow-up-right"></i> Open Vercel Project Settings
+                    </a>
+                </div>
+            </body>
+            </html>
+            <?php
+            exit;
+        } elseif ($isLocal) {
             die("Database Connection Error: " . htmlspecialchars($ex->getMessage()) . "<br>Please ensure MySQL is running in XAMPP / your database service.");
         } else {
             error_log("PocketPilot DB Error: " . $ex->getMessage());

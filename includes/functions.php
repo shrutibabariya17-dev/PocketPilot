@@ -225,10 +225,32 @@ function get_budget_status($pdo, $month) {
 }
 
 /**
- * Check if a user is currently logged in
+ * Check if a user is currently logged in (supports native session and signed cookie for serverless Vercel)
  */
 function is_logged_in() {
-    return !empty($_SESSION['user_id']);
+    if (!empty($_SESSION['user_id'])) {
+        return true;
+    }
+
+    // Serverless cookie fallback for stateless Vercel containers
+    if (!empty($_COOKIE['pp_auth'])) {
+        $secretKey = getenv('APP_SECRET') ?: 'pocketpilot_secure_auth_secret_2026';
+        $parts = explode('.', $_COOKIE['pp_auth'], 2);
+        if (count($parts) === 2) {
+            list($sig, $payloadBase64) = $parts;
+            if (hash_equals(hash_hmac('sha256', $payloadBase64, $secretKey), $sig)) {
+                $data = json_decode(base64_decode($payloadBase64), true);
+                if (is_array($data) && !empty($data['id'])) {
+                    $_SESSION['user_id'] = (int)$data['id'];
+                    $_SESSION['user_name'] = $data['name'] ?? 'Student';
+                    $_SESSION['user_email'] = $data['email'] ?? '';
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -246,25 +268,53 @@ function current_user() {
 }
 
 /**
- * Log in a user by saving their details to session
+ * Log in a user by saving their details to session and persistent signed cookie
  */
 function login_user($user) {
     if (session_status() === PHP_SESSION_ACTIVE) {
-        session_regenerate_id(true);
+        @session_regenerate_id(true);
     }
     $_SESSION['user_id'] = (int)$user['id'];
     $_SESSION['user_name'] = $user['name'];
     $_SESSION['user_email'] = $user['email'];
+
+    // Set signed cookie for serverless persistence (survives container recycling)
+    $secretKey = getenv('APP_SECRET') ?: 'pocketpilot_secure_auth_secret_2026';
+    $payloadBase64 = base64_encode(json_encode([
+        'id' => (int)$user['id'],
+        'name' => $user['name'],
+        'email' => $user['email'],
+        'time' => time()
+    ]));
+    $sig = hash_hmac('sha256', $payloadBase64, $secretKey);
+    $token = $sig . '.' . $payloadBase64;
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    
+    setcookie('pp_auth', $token, [
+        'expires' => time() + (86400 * 30),
+        'path' => '/',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 
 /**
- * Log out current user
+ * Log out current user and clear session and cookie
  */
 function logout_user() {
     unset($_SESSION['user_id'], $_SESSION['user_name'], $_SESSION['user_email']);
     if (session_status() === PHP_SESSION_ACTIVE) {
-        session_regenerate_id(true);
+        @session_regenerate_id(true);
     }
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    setcookie('pp_auth', '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 
 /**

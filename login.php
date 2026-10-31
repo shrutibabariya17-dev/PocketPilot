@@ -20,25 +20,29 @@ $email = '';
 
 // Handle 1-Click Instant Demo Login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'demo_login') {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
-    $stmt->execute(['student@pocketpilot.com']);
-    $user = $stmt->fetch();
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
+        $stmt->execute(['student@pocketpilot.com']);
+        $user = $stmt->fetch();
 
-    if (!$user) {
-        $hashed = password_hash('password123', PASSWORD_DEFAULT);
-        $stmtIns = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-        $stmtIns->execute(['Rahul Sharma', 'student@pocketpilot.com', $hashed]);
-        $user = [
-            'id' => $pdo->lastInsertId(),
-            'name' => 'Rahul Sharma',
-            'email' => 'student@pocketpilot.com'
-        ];
+        if (!$user) {
+            $hashed = password_hash('password123', PASSWORD_DEFAULT);
+            $stmtIns = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+            $stmtIns->execute(['Rahul Sharma', 'student@pocketpilot.com', $hashed]);
+            $user = [
+                'id' => $pdo->lastInsertId(),
+                'name' => 'Rahul Sharma',
+                'email' => 'student@pocketpilot.com'
+            ];
+        }
+
+        login_user($user);
+        set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>! Logged in with the student demo account.");
+        header("Location: " . $redirect);
+        exit;
+    } catch (Throwable $e) {
+        $errors[] = "Demo login error: " . $e->getMessage();
     }
-
-    login_user($user);
-    set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>! Logged in with the student demo account.");
-    header("Location: " . $redirect);
-    exit;
 }
 
 // Handle Normal Email & Password Login
@@ -57,17 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 
     if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
 
-        if ($user && password_verify($password, $user['password'])) {
-            login_user($user);
-            set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>!");
-            header("Location: " . $redirect);
-            exit;
-        } else {
-            $errors[] = "Invalid email or password. You can also click the 1-Click Demo Login button above to enter immediately!";
+            if ($user && password_verify($password, $user['password'])) {
+                login_user($user);
+                set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>!");
+                header("Location: " . $redirect);
+                exit;
+            } else {
+                $errors[] = "Invalid email or password. You can also click the 1-Click Demo Login button above to enter immediately!";
+            }
+        } catch (Throwable $e) {
+            $errors[] = "Login authentication error: " . $e->getMessage();
         }
     }
 }

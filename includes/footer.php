@@ -80,9 +80,9 @@
     </footer>
     <?php endif; ?>
 
-    <!-- JavaScript Files -->
-    <script src="js/main.js"></script>
-    <script src="js/charts.js"></script>
+    <!-- JavaScript Files (deferred for non-blocking rendering) -->
+    <script src="js/main.js" defer></script>
+    <script src="js/charts.js" defer></script>
 </body>
 </html>
 

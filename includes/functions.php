@@ -82,38 +82,35 @@ function get_categories($pdo, $type = null) {
 }
 
 /**
- * Get overall financial summary
+ * Get overall financial summary in a single optimized query
  */
 function get_financial_summary($pdo, $month = null) {
-    $whereExpense = "WHERE type = 'expense'";
-    $whereIncome = "WHERE type = 'income'";
-    $paramsExpense = [];
-    $paramsIncome = [];
-
     if ($month) {
-        $whereExpense .= " AND DATE_FORMAT(date, '%Y-%m') = ?";
-        $whereIncome .= " AND DATE_FORMAT(date, '%Y-%m') = ?";
-        $paramsExpense[] = $month;
-        $paramsIncome[] = $month;
+        $stmt = $pdo->prepare("
+            SELECT
+                COALESCE(SUM(CASE WHEN type = 'expense' AND DATE_FORMAT(date, '%Y-%m') = ? THEN amount ELSE 0 END), 0) as total_expenses,
+                COALESCE(SUM(CASE WHEN type = 'income' AND DATE_FORMAT(date, '%Y-%m') = ? THEN amount ELSE 0 END), 0) as total_income,
+                COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as all_expenses,
+                COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as all_income
+            FROM transactions
+        ");
+        $stmt->execute([$month, $month]);
+    } else {
+        $stmt = $pdo->query("
+            SELECT
+                COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expenses,
+                COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as total_income,
+                COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as all_expenses,
+                COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as all_income
+            FROM transactions
+        ");
     }
 
-    // Total Expenses
-    $stmtExp = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as total FROM transactions $whereExpense");
-    $stmtExp->execute($paramsExpense);
-    $totalExpenses = (float)$stmtExp->fetch()['total'];
-
-    // Total Income
-    $stmtInc = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as total FROM transactions $whereIncome");
-    $stmtInc->execute($paramsIncome);
-    $totalIncome = (float)$stmtInc->fetch()['total'];
-
-    // Available Balance (All time total income - all time total expenses)
-    $stmtAllExp = $pdo->query("SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'expense'");
-    $allExpenses = (float)$stmtAllExp->fetch()['total'];
-
-    $stmtAllInc = $pdo->query("SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = 'income'");
-    $allIncome = (float)$stmtAllInc->fetch()['total'];
-
+    $row = $stmt->fetch() ?: [];
+    $totalExpenses = (float)($row['total_expenses'] ?? 0);
+    $totalIncome = (float)($row['total_income'] ?? 0);
+    $allExpenses = (float)($row['all_expenses'] ?? 0);
+    $allIncome = (float)($row['all_income'] ?? 0);
     $availableBalance = $allIncome - $allExpenses;
 
     return [

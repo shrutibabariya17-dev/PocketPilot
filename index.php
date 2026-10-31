@@ -3,12 +3,8 @@
 $pageTitle = "PocketPilot — Master Your Student Budget & Savings";
 require_once __DIR__ . '/includes/header.php';
 
-// Quick stats for hero preview with resilient fallback
-try {
-    $summary = get_financial_summary($pdo, CURRENT_MONTH);
-    $recentList = get_recent_transactions($pdo, 3);
-} catch (Throwable $e) {
-    error_log("Hero stats preview fallback: " . $e->getMessage());
+// Quick stats for hero preview (instant zero-query rendering for landing page visitors)
+if (!is_logged_in()) {
     $summary = [
         'total_income' => 27000.00,
         'total_expenses' => 5414.00,
@@ -17,7 +13,27 @@ try {
         'all_income' => 27000.00,
         'all_expenses' => 5414.00
     ];
-    $recentList = [];
+    $recentList = [
+        ['type' => 'income', 'amount' => 15000.00, 'category' => 'Scholarship / Grant', 'date' => date('Y-m-01'), 'payment_method' => 'Bank Transfer', 'description' => 'Semester Merit Scholarship'],
+        ['type' => 'income', 'amount' => 6000.00, 'category' => 'Pocket Money / Allowance', 'date' => date('Y-m-03'), 'payment_method' => 'UPI / Online', 'description' => 'Monthly Home Pocket Money'],
+        ['type' => 'expense', 'amount' => 650.00, 'category' => 'Books & Study Supplies', 'date' => date('Y-m-04'), 'payment_method' => 'Debit Card', 'description' => 'Data Structures & Algorithms textbook']
+    ];
+} else {
+    try {
+        $summary = get_financial_summary($pdo, CURRENT_MONTH);
+        $recentList = get_recent_transactions($pdo, 3);
+    } catch (Throwable $e) {
+        error_log("Hero stats preview fallback: " . $e->getMessage());
+        $summary = [
+            'total_income' => 27000.00,
+            'total_expenses' => 5414.00,
+            'available_balance' => 21586.00,
+            'month_balance' => 21586.00,
+            'all_income' => 27000.00,
+            'all_expenses' => 5414.00
+        ];
+        $recentList = [];
+    }
 }
 ?>
 

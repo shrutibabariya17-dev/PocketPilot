@@ -93,6 +93,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Navbar "More" Dropdown Toggle
+    const navMoreDropdown = document.getElementById('navMoreDropdown');
+    if (navMoreDropdown) {
+        const moreBtn = navMoreDropdown.querySelector('.nav-dropdown-btn');
+        if (moreBtn) {
+            moreBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                navMoreDropdown.classList.toggle('show');
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!navMoreDropdown.contains(e.target)) {
+                navMoreDropdown.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                navMoreDropdown.classList.remove('show');
+            }
+        });
+    }
+
     // 4. Global Modal Handlers
     window.openModal = function (modalId) {
         const modal = document.getElementById(modalId);

@@ -179,6 +179,9 @@ ul {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex: 1;
+    justify-content: space-between;
+    margin-left: 1.5rem;
 }
 
 .nav-list {
@@ -219,10 +222,61 @@ ul {
 .nav-actions {
     display: flex;
     align-items: center;
+    gap: 0.65rem;
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .nav-cta {
     white-space: nowrap;
+}
+
+/* Desktop Dropdown for More Links */
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-btn {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.nav-caret {
+    font-size: 0.65rem;
+    margin-left: 0.15rem;
+    opacity: 0.7;
+    transition: transform var(--transition-fast);
+}
+
+.nav-dropdown.show .nav-caret {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 195px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12);
+    padding: 0.4rem 0;
+    z-index: 1050;
+    display: none;
+}
+
+.nav-dropdown.show .nav-dropdown-menu {
+    display: block;
+    animation: fadeInDropdown 0.15s ease-out;
+}
+
+.mobile-only {
+    display: none;
 }
 
 /* Mobile Toggle */
@@ -384,6 +438,24 @@ ul {
     background-color: var(--danger-light);
     border-color: var(--danger);
     color: var(--danger);
+}
+
+.btn-block {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-ghost {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--text-muted);
+}
+
+.btn-ghost:hover {
+    background-color: var(--secondary-light);
+    color: var(--text-dark);
 }
 
 /* ==========================================================================
@@ -1430,29 +1502,6 @@ ul {
     color: #94a3b8;
 }
 
-.footer-socials {
-    display: flex;
-    gap: 0.75rem;
-}
-
-.footer-socials a {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-sm);
-    background: #1e293b;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    transition: var(--transition);
-}
-
-.footer-socials a:hover {
-    background: var(--primary);
-    color: #ffffff;
-    transform: translateY(-2px);
-}
 
 .footer-heading {
     font-size: 0.95rem;
@@ -1601,6 +1650,7 @@ ul {
         display: none;
         overflow-y: auto;
         z-index: 9999;
+        margin-left: 0;
     }
 
     .nav-menu.show {
@@ -1617,6 +1667,14 @@ ul {
         flex-direction: column;
         align-items: stretch;
         gap: 0.35rem;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
     }
 
     .nav-link {
@@ -1763,13 +1821,56 @@ ul {
 /* ==========================================================================
    AUTHENTICATION STYLES (LOGIN & REGISTER)
    ========================================================================== */
+.auth-site-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.auth-nav-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+}
+
+.auth-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.auth-switch-text {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 576px) {
+    .auth-switch-text {
+        display: none;
+    }
+}
+
 .auth-page-container {
-    min-height: calc(100vh - 72px - 240px);
+    min-height: calc(100vh - 68px - 140px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem 1rem;
+    padding: 2rem 1rem 3.5rem;
     background: radial-gradient(circle at 50% 10%, rgba(79, 70, 229, 0.06) 0%, transparent 65%), #f8fafc;
+}
+
+.auth-footer-simple {
+    background: #ffffff;
+    border-top: 1px solid var(--border-color);
+    padding: 0;
 }
 
 .auth-wrapper {
@@ -1885,6 +1986,10 @@ ul {
     border-radius: var(--radius-sm);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     transition: all var(--transition-fast);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-demo:hover {

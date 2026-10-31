@@ -2,6 +2,13 @@
     <!-- Main Page Content Ends -->
 
     <!-- FOOTER -->
+    <?php if (in_array(basename($_SERVER['PHP_SELF']), ['login.php', 'register.php'])): ?>
+    <footer class="site-footer auth-footer-simple">
+        <div class="container footer-bottom-flex" style="justify-content: center; text-align: center; padding: 1.5rem 1rem;">
+            <p style="font-size: 0.85rem; color: #94a3b8;">&copy; <?= date('Y') ?> PocketPilot Student Finance &bull; Secure Student Authentication</p>
+        </div>
+    </footer>
+    <?php else: ?>
     <footer class="site-footer">
         <div class="footer-top">
             <div class="container footer-grid">
@@ -71,6 +78,7 @@
             </div>
         </div>
     </footer>
+    <?php endif; ?>
 
     <!-- JavaScript Files -->
     <script src="js/main.js"></script>

@@ -24,6 +24,40 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
 <body>
 
     <!-- TOP NAVIGATION BAR -->
+    <?php if (in_array($currentPage, ['login.php', 'register.php'])): ?>
+    <!-- 1. Dedicated Minimalist Header for Authentication Pages -->
+    <header class="site-header auth-site-header">
+        <div class="nav-container auth-nav-container">
+            <a href="index.php" class="brand-logo" title="Back to PocketPilot Home">
+                <div class="logo-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">Pocket<strong>Pilot</strong></span>
+                    <span class="brand-badge">Student Edition</span>
+                </div>
+            </a>
+
+            <div class="auth-header-actions">
+                <?php if ($currentPage === 'login.php'): ?>
+                    <span class="auth-switch-text">New to PocketPilot?</span>
+                    <a href="register.php" class="btn btn-primary btn-sm">
+                        <i class="bi bi-person-plus"></i> <span>Sign Up</span>
+                    </a>
+                <?php else: ?>
+                    <span class="auth-switch-text">Already registered?</span>
+                    <a href="login.php" class="btn btn-outline btn-sm">
+                        <i class="bi bi-box-arrow-in-right"></i> <span>Log In</span>
+                    </a>
+                <?php endif; ?>
+                <a href="index.php" class="btn btn-ghost btn-sm" title="Back to Homepage">
+                    <i class="bi bi-house"></i> <span class="hide-mobile">Home</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <?php else: ?>
+    <!-- 2. Main Navigation Header for All Application Pages -->
     <header class="site-header">
         <div class="nav-container">
             <a href="index.php" class="brand-logo">
@@ -41,7 +75,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                 <i class="bi bi-list"></i>
             </button>
 
-            <!-- Navigation Links (All 10 Pages) -->
+            <!-- Navigation Links -->
             <nav class="nav-menu" id="navMenu">
                 <ul class="nav-list">
                     <li class="nav-item">
@@ -52,16 +86,6 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                     <li class="nav-item">
                         <a href="dashboard.php" class="nav-link <?= is_active('dashboard.php') ?>">
                             <i class="bi bi-grid-1x2"></i> <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="add-expense.php" class="nav-link <?= is_active('add-expense.php') ?>">
-                            <i class="bi bi-dash-circle"></i> <span>Add Expense</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="income.php" class="nav-link <?= is_active('income.php') ?>">
-                            <i class="bi bi-plus-circle"></i> <span>Income</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -84,12 +108,45 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                             <i class="bi bi-bar-chart-line"></i> <span>Reports</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- Desktop "More" Dropdown (Prevents Navbar Overflow & Collision) -->
+                    <li class="nav-item nav-dropdown desktop-only" id="navMoreDropdown">
+                        <button type="button" class="nav-link nav-dropdown-btn <?= in_array($currentPage, ['tips.php', 'about.php', 'add-expense.php', 'income.php']) ? 'active' : '' ?>">
+                            <i class="bi bi-grid"></i> <span>More</span> <i class="bi bi-chevron-down nav-caret"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <a href="tips.php" class="dropdown-link <?= is_active('tips.php') ?>">
+                                <i class="bi bi-lightbulb"></i> Money Tips
+                            </a>
+                            <a href="about.php" class="dropdown-link <?= is_active('about.php') ?>">
+                                <i class="bi bi-info-circle"></i> About & Contact
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="add-expense.php" class="dropdown-link <?= is_active('add-expense.php') ?>">
+                                <i class="bi bi-dash-circle"></i> Add Expense
+                            </a>
+                            <a href="income.php" class="dropdown-link <?= is_active('income.php') ?>">
+                                <i class="bi bi-plus-circle"></i> Income Tracker
+                            </a>
+                        </div>
+                    </li>
+
+                    <!-- Mobile Drawer Links (Visible on Mobile Menu Only) -->
+                    <li class="nav-item mobile-only">
+                        <a href="add-expense.php" class="nav-link <?= is_active('add-expense.php') ?>">
+                            <i class="bi bi-dash-circle"></i> <span>Add Expense</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mobile-only">
+                        <a href="income.php" class="nav-link <?= is_active('income.php') ?>">
+                            <i class="bi bi-plus-circle"></i> <span>Income Tracker</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mobile-only">
                         <a href="tips.php" class="nav-link <?= is_active('tips.php') ?>">
                             <i class="bi bi-lightbulb"></i> <span>Money Tips</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mobile-only">
                         <a href="about.php" class="nav-link <?= is_active('about.php') ?>">
                             <i class="bi bi-info-circle"></i> <span>About & Contact</span>
                         </a>
@@ -113,7 +170,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <a href="dashboard.php" class="dropdown-link"><i class="bi bi-grid-1x2"></i> Dashboard</a>
-                                <a href="transactions.php" class="dropdown-link"><i class="bi bi-clock-history"></i> My Transactions</a>
+                                <a href="transactions.php" class="dropdown-link"><i class="bi bi-clock-history"></i> Transactions</a>
                                 <a href="budget.php" class="dropdown-link"><i class="bi bi-pie-chart"></i> Budgets</a>
                                 <a href="savings.php" class="dropdown-link"><i class="bi bi-piggy-bank"></i> Savings Goals</a>
                                 <div class="dropdown-divider"></div>
@@ -138,6 +195,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
             </nav>
         </div>
     </header>
+    <?php endif; ?>
 
     <!-- Global Flash Notification -->
     <?php $flash = get_flash(); if ($flash): ?>

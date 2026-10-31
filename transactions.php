@@ -265,19 +265,19 @@ $allCategories = get_categories($pdo);
                 <table class="custom-table" id="transactionsTable">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Date</th>
+                            <th style="width: 100px; white-space: nowrap;">Type</th>
+                            <th style="width: 110px; white-space: nowrap;">Date</th>
                             <th>Description</th>
-                            <th>Category</th>
-                            <th>Payment Method</th>
-                            <th style="text-align: right;">Amount</th>
-                            <th style="text-align: center;">Actions</th>
+                            <th style="width: 170px; white-space: nowrap;">Category</th>
+                            <th style="width: 130px; white-space: nowrap;">Payment Method</th>
+                            <th style="width: 140px; text-align: right; white-space: nowrap;">Amount</th>
+                            <th style="width: 90px; text-align: center; white-space: nowrap;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($transactions as $t): ?>
                         <tr id="row-<?= $t['id'] ?>">
-                            <td>
+                            <td style="white-space: nowrap;">
                                 <?php if ($t['type'] === 'income'): ?>
                                     <span class="badge badge-income"><i class="bi bi-arrow-down"></i> Income</span>
                                 <?php else: ?>
@@ -292,17 +292,17 @@ $allCategories = get_categories($pdo);
                                     <?= htmlspecialchars($t['description']) ?>
                                 </strong>
                             </td>
-                            <td>
+                            <td style="white-space: nowrap;">
                                 <span class="badge badge-category">
                                     <?= htmlspecialchars($t['category']) ?>
                                 </span>
                             </td>
-                            <td>
+                            <td style="white-space: nowrap;">
                                 <span style="font-size: 0.82rem; color: var(--text-muted);">
                                     <?= htmlspecialchars($t['payment_method']) ?>
                                 </span>
                             </td>
-                            <td style="text-align: right;">
+                            <td style="text-align: right; white-space: nowrap;">
                                 <?php if ($t['type'] === 'income'): ?>
                                     <span class="amount-income">+<?= format_currency($t['amount']) ?></span>
                                 <?php else: ?>

@@ -146,11 +146,11 @@ $avgDailySpend = $currentDay > 0 ? ($summary['total_expenses'] / $currentDay) : 
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th>Date</th>
+                                <th style="width: 110px; white-space: nowrap;">Date</th>
                                 <th>Description</th>
-                                <th>Category</th>
-                                <th>Method</th>
-                                <th style="text-align: right;">Amount</th>
+                                <th style="width: 170px; white-space: nowrap;">Category</th>
+                                <th style="width: 120px; white-space: nowrap;">Method</th>
+                                <th style="width: 140px; text-align: right; white-space: nowrap;">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -160,19 +160,19 @@ $avgDailySpend = $currentDay > 0 ? ($summary['total_expenses'] / $currentDay) : 
                                     <?= date('M d, Y', strtotime($tx['date'])) ?>
                                 </td>
                                 <td>
-                                    <strong style="color: var(--text-dark); display: block;"><?= htmlspecialchars($tx['description']) ?></strong>
+                                    <strong style="color: var(--text-dark); display: block; font-size: 0.92rem;"><?= htmlspecialchars($tx['description']) ?></strong>
                                 </td>
-                                <td>
+                                <td style="white-space: nowrap;">
                                     <span class="badge badge-category">
                                         <?= htmlspecialchars($tx['category']) ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td style="white-space: nowrap;">
                                     <span style="font-size: 0.82rem; color: var(--text-muted);">
                                         <?= htmlspecialchars($tx['payment_method']) ?>
                                     </span>
                                 </td>
-                                <td style="text-align: right;">
+                                <td style="text-align: right; white-space: nowrap;">
                                     <?php if ($tx['type'] === 'income'): ?>
                                         <span class="amount-income">+<?= format_currency($tx['amount']) ?></span>
                                     <?php else: ?>
@@ -214,14 +214,22 @@ $avgDailySpend = $currentDay > 0 ? ($summary['total_expenses'] / $currentDay) : 
                             $monthTotalExp = max(1, $summary['total_expenses']);
                             foreach ($categorySpending as $cat): 
                                 $pct = round(($cat['total'] / $monthTotalExp) * 100, 1);
+                                $barColor = !empty($cat['color']) ? $cat['color'] : '#4f46e5';
+                                $catIcon = !empty($cat['icon']) ? $cat['icon'] : 'bi-tag';
                         ?>
-                        <div class="breakdown-row">
-                            <div class="breakdown-info">
-                                <span><?= htmlspecialchars($cat['category']) ?></span>
-                                <span><?= format_currency($cat['total']) ?> <small style="color: var(--text-muted); font-weight: normal;">(<?= $pct ?>%)</small></span>
+                        <div class="breakdown-row" style="margin-bottom: 0.85rem;">
+                            <div class="breakdown-info" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; font-size: 0.88rem;">
+                                <span style="display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600; color: var(--text-dark);">
+                                    <i class="bi <?= htmlspecialchars($catIcon) ?>" style="color: <?= htmlspecialchars($barColor) ?>; font-size: 0.95rem;"></i>
+                                    <?= htmlspecialchars($cat['category']) ?>
+                                </span>
+                                <span style="white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 0.88rem;">
+                                    <strong><?= format_currency($cat['total']) ?></strong> 
+                                    <small style="color: var(--text-muted); font-weight: normal;">(<?= $pct ?>%)</small>
+                                </span>
                             </div>
-                            <div class="progress-bar-container" style="height: 8px;">
-                                <div class="progress-bar progress-primary" style="width: <?= $pct ?>%;"></div>
+                            <div class="progress-bar-container" style="height: 7px; background-color: #f1f5f9; border-radius: 9999px; overflow: hidden;">
+                                <div class="progress-bar" style="width: <?= $pct ?>%; background-color: <?= htmlspecialchars($barColor) ?>; border-radius: 9999px; transition: width 0.6s ease;"></div>
                             </div>
                         </div>
                         <?php endforeach; ?>

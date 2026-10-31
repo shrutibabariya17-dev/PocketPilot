@@ -99,16 +99,32 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                 <!-- Header User & Actions -->
                 <div class="nav-actions">
                     <?php if (is_logged_in()): ?>
-                        <?php $currentUser = current_user(); ?>
-                        <div class="user-pill" title="Signed in as <?= htmlspecialchars($currentUser['email']) ?>">
-                            <span class="user-avatar"><i class="bi bi-person-fill"></i></span>
-                            <span class="user-name"><?= htmlspecialchars($currentUser['name']) ?></span>
+                        <?php $currentUser = current_user(); $firstName = explode(' ', $currentUser['name'])[0]; ?>
+                        <div class="user-menu-wrapper" id="userMenuWrapper">
+                            <button type="button" class="user-pill-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" title="Account Menu">
+                                <span class="user-avatar"><i class="bi bi-person-fill"></i></span>
+                                <span class="user-name"><?= htmlspecialchars($firstName) ?></span>
+                                <i class="bi bi-chevron-down user-caret"></i>
+                            </button>
+                            <div class="user-dropdown-menu" id="userDropdownMenu">
+                                <div class="dropdown-user-info">
+                                    <strong class="dropdown-name"><?= htmlspecialchars($currentUser['name']) ?></strong>
+                                    <span class="dropdown-email"><?= htmlspecialchars($currentUser['email']) ?></span>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a href="dashboard.php" class="dropdown-link"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+                                <a href="transactions.php" class="dropdown-link"><i class="bi bi-clock-history"></i> My Transactions</a>
+                                <a href="budget.php" class="dropdown-link"><i class="bi bi-pie-chart"></i> Budgets</a>
+                                <a href="savings.php" class="dropdown-link"><i class="bi bi-piggy-bank"></i> Savings Goals</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="logout.php" class="dropdown-link dropdown-logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+                            </div>
                         </div>
                         <a href="add-expense.php" class="btn btn-primary btn-sm nav-cta">
-                            <i class="bi bi-plus-lg"></i> <span>Quick Expense</span>
+                            <i class="bi bi-plus-lg"></i> <span>Expense</span>
                         </a>
-                        <a href="logout.php" class="btn btn-outline btn-sm nav-logout" title="Sign out of PocketPilot">
-                            <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+                        <a href="logout.php" class="btn btn-outline btn-sm nav-logout-icon" title="Sign out of PocketPilot">
+                            <i class="bi bi-box-arrow-right"></i>
                         </a>
                     <?php else: ?>
                         <a href="login.php" class="btn btn-outline btn-sm nav-login">

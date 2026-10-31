@@ -76,7 +76,7 @@ $pageTitle = "Create Student Account";
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container">
+<div class="auth-page-container">
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-header">
@@ -167,3 +167,4 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

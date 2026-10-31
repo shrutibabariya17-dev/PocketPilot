@@ -2,13 +2,20 @@
 // includes/functions.php - Helper Functions for PocketPilot
 
 /**
- * Sanitize user input
+ * Sanitize user input (removes null bytes and trims whitespace; does not mangle entities like '&')
  */
 function sanitize($data) {
     if (is_array($data)) {
         return array_map('sanitize', $data);
     }
-    return htmlspecialchars(trim((string)$data), ENT_QUOTES, 'UTF-8');
+    return trim(str_replace("\0", '', (string)$data));
+}
+
+/**
+ * Safe HTML escape for display
+ */
+function e($string) {
+    return htmlspecialchars((string)$string, ENT_QUOTES, 'UTF-8');
 }
 
 /**
@@ -127,10 +134,13 @@ function get_recent_transactions($pdo, $limit = 5) {
  */
 function get_category_spending($pdo, $month) {
     $stmt = $pdo->prepare("
-        SELECT category, SUM(amount) as total, COUNT(*) as count 
-        FROM transactions 
-        WHERE type = 'expense' AND DATE_FORMAT(date, '%Y-%m') = ?
-        GROUP BY category 
+        SELECT t.category, SUM(t.amount) as total, COUNT(*) as count,
+               COALESCE(MAX(c.color), '#4f46e5') as color,
+               COALESCE(MAX(c.icon), 'bi-tag') as icon
+        FROM transactions t
+        LEFT JOIN categories c ON t.category = c.name
+        WHERE t.type = 'expense' AND DATE_FORMAT(t.date, '%Y-%m') = ?
+        GROUP BY t.category
         ORDER BY total DESC
     ");
     $stmt->execute([$month]);

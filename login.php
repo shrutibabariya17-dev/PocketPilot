@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 
     login_user($user);
-    set_flash('success', "Welcome, <strong>" . htmlspecialchars($user['name']) . "</strong>! Logged in with the student demo account.");
+    set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>! Logged in with the student demo account.");
     header("Location: " . $redirect);
     exit;
 }
@@ -76,7 +76,7 @@ $pageTitle = "Student Login";
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container">
+<div class="auth-page-container">
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-header">
@@ -93,7 +93,7 @@ require_once __DIR__ . '/includes/header.php';
                     <i class="bi bi-lightning-charge-fill"></i> Instant Access
                 </div>
                 <div class="auth-demo-text">Anyone can sign in with 1 click (no password needed):</div>
-                <form method="POST" action="login.php?redirect=<?= urlencode($redirect) ?>">
+                <form method="POST" action="login.php?redirect=<?= urlencode($redirect) ?>" style="margin-bottom: 0.65rem;">
                     <input type="hidden" name="action" value="demo_login">
                     <button type="submit" class="btn btn-demo btn-block">
                         <i class="bi bi-box-arrow-in-right"></i> 1-Click Student Demo Login
@@ -102,7 +102,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="auth-demo-creds">
                     <span>Email: <code>student@pocketpilot.com</code></span>
                     <span>Pass: <code>password123</code></span>
-                    <button type="button" class="btn-fill-creds" onclick="fillDemoCreds()">Auto-Fill Form</button>
+                    <button type="button" class="btn-fill-creds" onclick="fillDemoCreds()"><i class="bi bi-magic"></i> Auto-Fill Form</button>
                 </div>
             </div>
 
@@ -139,34 +139,33 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <div class="form-group">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                        <label for="loginPassword" class="form-label" style="margin-bottom: 0;">Password <span class="required">*</span></label>
-                        <button type="button" class="btn-fill-creds" onclick="togglePasswordVisibility()" id="togglePwdBtn" style="font-size: 0.78rem;">
-                            <i class="bi bi-eye"></i> Show
-                        </button>
-                    </div>
-                    <div class="input-with-icon">
+                    <label for="loginPassword" class="form-label">Password <span class="required">*</span></label>
+                    <div class="input-with-icon" style="position: relative;">
                         <i class="bi bi-lock input-icon"></i>
                         <input type="password" id="loginPassword" name="password" class="form-control" 
-                               placeholder="Enter your password" required autocomplete="current-password">
+                               placeholder="Enter your password" required autocomplete="current-password"
+                               style="padding-right: 2.75rem;">
+                        <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility()" id="togglePwdBtn" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem;">
                     <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--text-dark); cursor: pointer; user-select: none;">
                         <input type="checkbox" name="remember" value="1" checked style="accent-color: var(--primary); width: 16px; height: 16px;">
                         Remember me on this browser
                     </label>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; font-size: 1rem; font-weight: 700;">
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; font-size: 1rem; font-weight: 700; margin-top: 0.5rem;">
                     <i class="bi bi-box-arrow-in-right"></i> Sign In to Account
                 </button>
             </form>
 
             <div class="auth-footer-links">
                 <p>Don't have an account yet? <a href="register.php?redirect=<?= urlencode($redirect) ?>">Create a Free Student Account</a></p>
-                <p style="margin-top: 0.5rem;"><a href="index.php" style="color: var(--text-muted); font-size: 0.84rem;"><i class="bi bi-arrow-left"></i> Back to PocketPilot Home</a></p>
+                <p style="margin-top: 0.75rem;"><a href="index.php" style="color: var(--text-muted); font-size: 0.84rem;"><i class="bi bi-arrow-left"></i> Back to PocketPilot Home</a></p>
             </div>
         </div>
     </div>
@@ -184,10 +183,10 @@ function togglePasswordVisibility() {
     const toggleBtn = document.getElementById('togglePwdBtn');
     if (pwdInput.type === 'password') {
         pwdInput.type = 'text';
-        toggleBtn.innerHTML = '<i class="bi bi-eye-slash"></i> Hide';
+        toggleBtn.innerHTML = '<i class="bi bi-eye-slash"></i>';
     } else {
         pwdInput.type = 'password';
-        toggleBtn.innerHTML = '<i class="bi bi-eye"></i> Show';
+        toggleBtn.innerHTML = '<i class="bi bi-eye"></i>';
     }
 }
 </script>

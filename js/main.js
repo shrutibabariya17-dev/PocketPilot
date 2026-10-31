@@ -65,6 +65,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     }
 
+    // User Profile Dropdown Toggle
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    const userMenuWrapper = document.getElementById('userMenuWrapper');
+
+    if (userMenuBtn && userDropdownMenu) {
+        userMenuBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const isOpen = userDropdownMenu.classList.contains('show');
+            userDropdownMenu.classList.toggle('show');
+            userMenuBtn.setAttribute('aria-expanded', !isOpen);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (userDropdownMenu.classList.contains('show') && userMenuWrapper && !userMenuWrapper.contains(e.target)) {
+                userDropdownMenu.classList.remove('show');
+                userMenuBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && userDropdownMenu.classList.contains('show')) {
+                userDropdownMenu.classList.remove('show');
+                userMenuBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
     // 4. Global Modal Handlers
     window.openModal = function (modalId) {
         const modal = document.getElementById(modalId);

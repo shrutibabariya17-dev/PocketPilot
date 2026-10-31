@@ -7,3 +7,4 @@ logout_user();
 set_flash('info', 'You have been signed out successfully. Come back soon to track your finances!');
 header("Location: login.php");
 exit;
+

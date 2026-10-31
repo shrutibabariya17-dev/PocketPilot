@@ -117,7 +117,8 @@ ul {
 }
 
 .nav-container {
-    max-width: 1300px;
+    max-width: 1440px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 1.25rem;
     display: flex;
@@ -183,16 +184,16 @@ ul {
 .nav-list {
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.15rem;
 }
 
 .nav-link {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.45rem 0.65rem;
+    gap: 0.3rem;
+    padding: 0.4rem 0.52rem;
     border-radius: var(--radius-sm);
-    font-size: 0.86rem;
+    font-size: 0.82rem;
     font-weight: 500;
     color: var(--text-muted);
     transition: var(--transition);
@@ -200,7 +201,7 @@ ul {
 }
 
 .nav-link i {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     opacity: 0.85;
 }
 
@@ -759,14 +760,20 @@ ul {
     background-color: #fafbfc;
 }
 
+.amount-income, .amount-expense {
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    display: inline-block;
+    letter-spacing: -0.01em;
+}
+
 .amount-income {
     color: var(--success);
-    font-weight: 700;
 }
 
 .amount-expense {
     color: var(--danger);
-    font-weight: 700;
 }
 
 /* Badges */
@@ -1573,8 +1580,8 @@ ul {
    RESPONSIVE DESIGN (MEDIA QUERIES)
    ========================================================================== */
 
-/* 1. Large Tablets & Small Laptops (<= 1180px): Mobile Menu Activates */
-@media (max-width: 1180px) {
+/* 1. Large Tablets & Small Laptops (<= 1260px): Mobile Menu Activates */
+@media (max-width: 1260px) {
     .mobile-toggle {
         display: flex;
     }
@@ -1756,18 +1763,49 @@ ul {
 /* ==========================================================================
    AUTHENTICATION STYLES (LOGIN & REGISTER)
    ========================================================================== */
+.auth-page-container {
+    min-height: calc(100vh - 72px - 240px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    background: radial-gradient(circle at 50% 10%, rgba(79, 70, 229, 0.06) 0%, transparent 65%), #f8fafc;
+}
+
 .auth-wrapper {
-    max-width: 500px;
-    margin: 2rem auto 4rem;
-    padding: 0 1rem;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .auth-card {
     background: #ffffff;
     border-radius: var(--radius-lg);
-    padding: 2.25rem 2rem;
-    box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08);
+    padding: 2.25rem 2.25rem;
+    box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.09), 0 0 0 1px rgba(15, 23, 42, 0.04);
     border: 1px solid var(--border-color);
+}
+
+.btn-pwd-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 1.15rem;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+}
+
+.btn-pwd-eye:hover {
+    color: var(--primary);
 }
 
 .auth-header {
@@ -1930,18 +1968,123 @@ ul {
     text-decoration: underline;
 }
 
-/* Header User Pill & Actions */
-.user-pill {
+/* Header User Pill, Dropdown & Actions */
+.user-menu-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.user-pill-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.75rem;
+    gap: 0.45rem;
+    padding: 0.35rem 0.65rem;
     background: #f1f5f9;
     border-radius: 9999px;
-    font-size: 0.84rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--text-dark);
     border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.user-pill-btn:hover,
+.user-pill-btn[aria-expanded="true"] {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.user-caret {
+    font-size: 0.65rem;
+    opacity: 0.7;
+    transition: transform var(--transition-fast);
+}
+
+.user-pill-btn[aria-expanded="true"] .user-caret {
+    transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12);
+    padding: 0.5rem 0;
+    z-index: 1050;
+    display: none;
+}
+
+.user-dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-user-info {
+    padding: 0.5rem 1rem 0.65rem;
+}
+
+.dropdown-name {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.dropdown-email {
+    display: block;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--border-light);
+    margin: 0.35rem 0;
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.84rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: background-color var(--transition-fast);
+}
+
+.dropdown-link:hover {
+    background-color: #f8fafc;
+    color: var(--primary);
+}
+
+.dropdown-link i {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.dropdown-link:hover i {
+    color: var(--primary);
+}
+
+.dropdown-logout {
+    color: #dc2626;
+}
+
+.dropdown-logout:hover {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}
+
+.dropdown-logout i {
+    color: #dc2626;
 }
 
 .user-avatar {
@@ -1956,14 +2099,22 @@ ul {
     font-size: 0.75rem;
 }
 
-.nav-logout {
-    border-color: #cbd5e1;
+.nav-logout-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
     color: #64748b;
-    font-size: 0.82rem;
-    padding: 0.4rem 0.7rem;
+    padding: 0;
+    font-size: 0.95rem;
+    background: #ffffff;
+    transition: var(--transition-fast);
 }
 
-.nav-logout:hover {
+.nav-logout-icon:hover {
     background-color: #fee2e2;
     border-color: #fca5a5;
     color: #dc2626;
@@ -1972,9 +2123,9 @@ ul {
 .nav-login {
     border-color: var(--primary);
     color: var(--primary);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    padding: 0.45rem 0.9rem;
+    padding: 0.4rem 0.8rem;
 }
 
 .nav-login:hover {
@@ -1982,7 +2133,7 @@ ul {
     color: #ffffff;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1260px) {
     .auth-wrapper {
         margin: 1.5rem auto 3rem;
     }
@@ -1991,8 +2142,12 @@ ul {
         padding: 1.75rem 1.25rem;
     }
 
-    .user-pill {
+    .user-menu-wrapper {
         margin-bottom: 0.5rem;
+        width: 100%;
+    }
+
+    .user-pill-btn {
         width: 100%;
         justify-content: center;
     }

@@ -367,5 +367,9 @@ try {
 // App-wide configuration constants
 define('APP_NAME', 'PocketPilot');
 define('APP_TAGLINE', 'Your Smart Student Financial Co-Pilot');
-define('CURRENCY_SYMBOL', getenv('CURRENCY_SYMBOL') ?: '₹');
+$rawCurrency = getenv('CURRENCY_SYMBOL');
+if (empty($rawCurrency) || is_numeric($rawCurrency) || strlen($rawCurrency) > 5) {
+    $rawCurrency = '₹';
+}
+define('CURRENCY_SYMBOL', $rawCurrency);
 define('CURRENT_MONTH', date('Y-m'));

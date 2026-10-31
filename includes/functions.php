@@ -26,7 +26,14 @@ function format_currency($amount, $showSymbol = true) {
     $isNegative = $val < 0;
     $formatted = number_format(abs($val), 2);
     if ($showSymbol) {
-        return ($isNegative ? '-' : '') . CURRENCY_SYMBOL . $formatted;
+        $symbol = '₹';
+        if (defined('CURRENCY_SYMBOL')) {
+            $candidate = (string)CURRENCY_SYMBOL;
+            if (!empty($candidate) && !is_numeric($candidate) && strlen($candidate) <= 5) {
+                $symbol = $candidate;
+            }
+        }
+        return ($isNegative ? '-' : '') . $symbol . $formatted;
     }
     return ($isNegative ? '-' : '') . $formatted;
 }

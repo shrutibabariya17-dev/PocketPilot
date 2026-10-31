@@ -28,12 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if (!$user) {
             $hashed = password_hash('password123', PASSWORD_DEFAULT);
             $stmtIns = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-            $stmtIns->execute(['Rahul Sharma', 'student@pocketpilot.com', $hashed]);
+            $stmtIns->execute(['Shruti', 'student@pocketpilot.com', $hashed]);
             $user = [
                 'id' => $pdo->lastInsertId(),
-                'name' => 'Rahul Sharma',
+                'name' => 'Shruti',
                 'email' => 'student@pocketpilot.com'
             ];
+        } else {
+            // Update name to Shruti without surname
+            if ($user['name'] !== 'Shruti') {
+                $pdo->prepare("UPDATE users SET name = 'Shruti' WHERE id = ?")->execute([$user['id']]);
+                $user['name'] = 'Shruti';
+            }
         }
 
         login_user($user);
@@ -67,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
+                if ($user['email'] === 'student@pocketpilot.com' && $user['name'] !== 'Shruti') {
+                    $pdo->prepare("UPDATE users SET name = 'Shruti' WHERE id = ?")->execute([$user['id']]);
+                    $user['name'] = 'Shruti';
+                }
                 login_user($user);
                 set_flash('success', "Welcome back, <strong>" . htmlspecialchars($user['name']) . "</strong>!");
                 header("Location: " . $redirect);

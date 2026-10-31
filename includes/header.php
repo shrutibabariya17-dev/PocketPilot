@@ -77,6 +77,32 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
 
             <!-- Navigation Links -->
             <nav class="nav-menu" id="navMenu">
+                <?php if (is_logged_in()): ?>
+                    <?php 
+                    $currentUser = current_user(); 
+                    $displayName = $currentUser['name'] ?? 'Shruti';
+                    if (stripos($displayName, 'Rahul') !== false) {
+                        $displayName = 'Shruti';
+                    }
+                    ?>
+                    <!-- Mobile Drawer: Prominent Top User Profile & Quick Logout -->
+                    <div class="mobile-user-card mobile-only">
+                        <div class="mobile-user-profile">
+                            <div class="mobile-user-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div class="mobile-user-meta">
+                                <span class="mobile-user-label">Logged In</span>
+                                <strong class="mobile-user-name"><?= htmlspecialchars($displayName) ?></strong>
+                                <span class="mobile-user-email"><?= htmlspecialchars($currentUser['email'] ?? 'student@pocketpilot.com') ?></span>
+                            </div>
+                        </div>
+                        <a href="logout.php" class="mobile-user-logout-btn" title="Sign out of PocketPilot">
+                            <i class="bi bi-box-arrow-right"></i> <span>Log Out</span>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a href="index.php" class="nav-link <?= is_active('index.php') ?>">
@@ -151,21 +177,27 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                             <i class="bi bi-info-circle"></i> <span>About & Contact</span>
                         </a>
                     </li>
+                    <?php if (is_logged_in()): ?>
+                    <li class="nav-item mobile-only">
+                        <a href="logout.php" class="nav-link nav-link-logout" title="Sign out of your account">
+                            <i class="bi bi-box-arrow-right"></i> <span>Log Out (<?= htmlspecialchars($displayName) ?>)</span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
 
                 <!-- Header User & Actions -->
                 <div class="nav-actions">
                     <?php if (is_logged_in()): ?>
-                        <?php $currentUser = current_user(); $firstName = explode(' ', $currentUser['name'])[0]; ?>
-                        <div class="user-menu-wrapper" id="userMenuWrapper">
+                        <div class="user-menu-wrapper desktop-only" id="userMenuWrapper">
                             <button type="button" class="user-pill-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" title="Account Menu">
                                 <span class="user-avatar"><i class="bi bi-person-fill"></i></span>
-                                <span class="user-name"><?= htmlspecialchars($firstName) ?></span>
+                                <span class="user-name"><?= htmlspecialchars($displayName) ?></span>
                                 <i class="bi bi-chevron-down user-caret"></i>
                             </button>
                             <div class="user-dropdown-menu" id="userDropdownMenu">
                                 <div class="dropdown-user-info">
-                                    <strong class="dropdown-name"><?= htmlspecialchars($currentUser['name']) ?></strong>
+                                    <strong class="dropdown-name"><?= htmlspecialchars($displayName) ?></strong>
                                     <span class="dropdown-email"><?= htmlspecialchars($currentUser['email']) ?></span>
                                 </div>
                                 <div class="dropdown-divider"></div>
@@ -180,8 +212,11 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                         <a href="add-expense.php" class="btn btn-primary btn-sm nav-cta">
                             <i class="bi bi-plus-lg"></i> <span>Expense</span>
                         </a>
-                        <a href="logout.php" class="btn btn-outline btn-sm nav-logout-icon" title="Sign out of PocketPilot">
+                        <a href="logout.php" class="btn btn-outline btn-sm nav-logout-icon desktop-only" title="Sign out of PocketPilot">
                             <i class="bi bi-box-arrow-right"></i>
+                        </a>
+                        <a href="logout.php" class="btn btn-danger-soft btn-sm mobile-only mobile-bottom-logout-btn" title="Sign out of PocketPilot">
+                            <i class="bi bi-box-arrow-right"></i> <span>Sign Out of Account</span>
                         </a>
                     <?php else: ?>
                         <a href="login.php" class="btn btn-outline btn-sm nav-login">

@@ -353,12 +353,14 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
     }
 
-    // Ensure demo account exists
-    $demoUser = $pdo->query("SELECT id FROM `users` WHERE `email` = 'student@pocketpilot.com' LIMIT 1")->fetch();
+    // Ensure demo account exists and account holder name is Shruti
+    $demoUser = $pdo->query("SELECT id, name FROM `users` WHERE `email` = 'student@pocketpilot.com' LIMIT 1")->fetch();
     if (!$demoUser) {
         $pdo->exec("INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
-            (1, 'Rahul Sharma', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
-            ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);");
+            (1, 'Shruti', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
+            ON DUPLICATE KEY UPDATE `name` = 'Shruti';");
+    } else if ($demoUser['name'] !== 'Shruti') {
+        $pdo->exec("UPDATE `users` SET `name` = 'Shruti' WHERE `email` = 'student@pocketpilot.com' OR `id` = 1");
     }
 } catch (PDOException $ex) {
     error_log("Schema auto-init check: " . $ex->getMessage());

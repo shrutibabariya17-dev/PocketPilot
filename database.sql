@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Seed default demo student account (password: password123)
 INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
-(1, 'Rahul Sharma', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `password` = VALUES(`password`);
+(1, 'Shruti', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
+ON DUPLICATE KEY UPDATE `name` = 'Shruti', `password` = VALUES(`password`);
 
 -- Clear and seed default categories
 TRUNCATE TABLE `categories`;

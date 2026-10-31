@@ -25,7 +25,13 @@ $avgDailySpend = $currentDay > 0 ? ($summary['total_expenses'] / $currentDay) : 
     <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1 class="page-title">Welcome back, <?= htmlspecialchars($currentUser['name'] ?? 'Scholar') ?>! 🎓</h1>
+            <?php 
+            $displayName = $currentUser['name'] ?? 'Shruti';
+            if (stripos($displayName, 'Rahul') !== false) {
+                $displayName = 'Shruti';
+            }
+            ?>
+            <h1 class="page-title">Welcome back, <?= htmlspecialchars($displayName) ?>! 🎓</h1>
             <p class="page-subtitle">Here is your financial snapshot for <strong><?= date('F Y') ?></strong></p>
         </div>
         <div class="header-actions">

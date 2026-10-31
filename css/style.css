@@ -276,7 +276,7 @@ ul {
 }
 
 .mobile-only {
-    display: none;
+    display: none !important;
 }
 
 /* Mobile Toggle */
@@ -403,6 +403,20 @@ ul {
 .btn-danger:hover {
     background-color: var(--danger-hover);
     color: #ffffff;
+}
+
+.btn-danger-soft {
+    background-color: #fee2e2;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca;
+    font-weight: 600;
+}
+
+.btn-danger-soft:hover,
+.btn-danger-soft:active {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
 }
 
 .btn-outline {
@@ -1641,14 +1655,18 @@ ul {
         left: 0;
         width: 100%;
         height: calc(100vh - 72px);
+        height: calc(100dvh - 72px);
+        max-height: calc(100dvh - 72px);
         background-color: #ffffff;
         border-bottom: 1px solid var(--border-color);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
         flex-direction: column;
         align-items: stretch;
-        padding: 1.5rem 1.25rem;
+        padding: 1.25rem 1.25rem 6.5rem 1.25rem;
         display: none;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
         z-index: 9999;
         margin-left: 0;
     }
@@ -1661,6 +1679,98 @@ ul {
     @keyframes navSlideDown {
         from { opacity: 0; transform: translateY(-8px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile Drawer: Prominent Top User Profile Card */
+    .mobile-user-card {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(99, 102, 241, 0.03) 100%);
+        border: 1px solid rgba(79, 70, 229, 0.16);
+        border-radius: var(--radius-md);
+        padding: 0.85rem 1rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .mobile-user-profile {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+    }
+
+    .mobile-user-avatar {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+    }
+
+    .mobile-user-meta {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .mobile-user-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+        line-height: 1.2;
+    }
+
+    .mobile-user-name {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mobile-user-email {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mobile-user-logout-btn {
+        background: #fee2e2;
+        color: #dc2626 !important;
+        border: 1px solid #fecaca;
+        font-weight: 700;
+        padding: 0.45rem 0.85rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        flex-shrink: 0;
+        transition: all var(--transition-fast);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .mobile-user-logout-btn:hover,
+    .mobile-user-logout-btn:active {
+        background: #dc2626;
+        color: #ffffff !important;
+        border-color: #dc2626;
     }
 
     .nav-list {
@@ -1688,7 +1798,30 @@ ul {
         font-size: 1.15rem;
     }
 
+    /* Danger Logout Item in Mobile Drawer List */
+    .nav-link-logout {
+        color: #dc2626 !important;
+        background-color: #fef2f2 !important;
+        border: 1px solid #fee2e2 !important;
+        font-weight: 700 !important;
+        margin-top: 0.5rem;
+    }
+
+    .nav-link-logout i {
+        color: #dc2626 !important;
+    }
+
+    .nav-link-logout:hover,
+    .nav-link-logout:active {
+        background-color: #fee2e2 !important;
+        color: #b91c1c !important;
+        border-color: #fca5a5 !important;
+    }
+
     .nav-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
         margin-top: 1.25rem;
         padding-top: 1.25rem;
         border-top: 1px solid var(--border-color);
@@ -1698,6 +1831,32 @@ ul {
         width: 100%;
         padding: 0.75rem 1.25rem;
         font-size: 1rem;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .mobile-bottom-logout-btn {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.25rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        border-radius: var(--radius-md) !important;
+        background: #fee2e2 !important;
+        color: #dc2626 !important;
+        border: 1px solid #fecaca !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 3px rgba(220, 38, 38, 0.08);
+    }
+
+    .mobile-bottom-logout-btn:hover,
+    .mobile-bottom-logout-btn:active {
+        background: #dc2626 !important;
+        color: #ffffff !important;
+        border-color: #dc2626 !important;
     }
 }
 

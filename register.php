@@ -108,7 +108,7 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="input-with-icon">
                         <i class="bi bi-person input-icon"></i>
                         <input type="text" id="regName" name="name" class="form-control" 
-                               placeholder="e.g. Priya Sharma" 
+                               placeholder="e.g. Shruti" 
                                value="<?= htmlspecialchars($name) ?>" required autocomplete="name">
                     </div>
                 </div>

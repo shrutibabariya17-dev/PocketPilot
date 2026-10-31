@@ -248,8 +248,12 @@ function is_logged_in() {
             if (hash_equals(hash_hmac('sha256', $payloadBase64, $secretKey), $sig)) {
                 $data = json_decode(base64_decode($payloadBase64), true);
                 if (is_array($data) && !empty($data['id'])) {
+                    $uName = $data['name'] ?? 'Shruti';
+                    if (stripos($uName, 'Rahul') !== false || $uName === 'Student' || $uName === 'Scholar') {
+                        $uName = 'Shruti';
+                    }
                     $_SESSION['user_id'] = (int)$data['id'];
-                    $_SESSION['user_name'] = $data['name'] ?? 'Student';
+                    $_SESSION['user_name'] = $uName;
                     $_SESSION['user_email'] = $data['email'] ?? '';
                     return true;
                 }
@@ -267,9 +271,14 @@ function current_user() {
     if (!is_logged_in()) {
         return null;
     }
+    $uName = $_SESSION['user_name'] ?? 'Shruti';
+    if (stripos($uName, 'Rahul') !== false || $uName === 'Student' || $uName === 'Scholar') {
+        $uName = 'Shruti';
+        $_SESSION['user_name'] = 'Shruti';
+    }
     return [
         'id' => $_SESSION['user_id'],
-        'name' => $_SESSION['user_name'] ?? 'Student',
+        'name' => $uName,
         'email' => $_SESSION['user_email'] ?? ''
     ];
 }
@@ -281,15 +290,19 @@ function login_user($user) {
     if (session_status() === PHP_SESSION_ACTIVE) {
         @session_regenerate_id(true);
     }
+    $uName = $user['name'] ?? 'Shruti';
+    if (stripos($uName, 'Rahul') !== false) {
+        $uName = 'Shruti';
+    }
     $_SESSION['user_id'] = (int)$user['id'];
-    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_name'] = $uName;
     $_SESSION['user_email'] = $user['email'];
 
     // Set signed cookie for serverless persistence (survives container recycling)
     $secretKey = getenv('APP_SECRET') ?: 'pocketpilot_secure_auth_secret_2026';
     $payloadBase64 = base64_encode(json_encode([
         'id' => (int)$user['id'],
-        'name' => $user['name'],
+        'name' => $uName,
         'email' => $user['email'],
         'time' => time()
     ]));

@@ -26,3 +26,4 @@ pocketpilot-deploy.zip
 # Node or Composer if ever introduced
 node_modules/
 vendor/
+

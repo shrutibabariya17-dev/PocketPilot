@@ -1,5 +1,9 @@
 <?php
 // dashboard.php - PocketPilot Main Dashboard
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_login();
+
 $pageTitle = "Student Dashboard";
 require_once __DIR__ . '/includes/header.php';
 
@@ -8,6 +12,7 @@ $summary = get_financial_summary($pdo, $currentMonth);
 $recentTransactions = get_recent_transactions($pdo, 6);
 $categorySpending = get_category_spending($pdo, $currentMonth);
 $budgetStatus = get_budget_status($pdo, $currentMonth);
+$currentUser = current_user();
 
 // Calculate days remaining in month for daily spending pace
 $daysInMonth = (int)date('t');
@@ -20,7 +25,7 @@ $avgDailySpend = $currentDay > 0 ? ($summary['total_expenses'] / $currentDay) : 
     <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1 class="page-title">Welcome back, Scholar! 🎓</h1>
+            <h1 class="page-title">Welcome back, <?= htmlspecialchars($currentUser['name'] ?? 'Scholar') ?>! 🎓</h1>
             <p class="page-subtitle">Here is your financial snapshot for <strong><?= date('F Y') ?></strong></p>
         </div>
         <div class="header-actions">

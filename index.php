@@ -22,12 +22,21 @@ $recentList = get_recent_transactions($pdo, 3);
         </p>
 
         <div class="hero-buttons">
-            <a href="dashboard.php" class="btn btn-primary btn-lg">
-                <i class="bi bi-speedometer2"></i> Open Dashboard
-            </a>
-            <a href="add-expense.php" class="btn btn-outline btn-lg">
-                <i class="bi bi-plus-circle"></i> Log an Expense
-            </a>
+            <?php if (is_logged_in()): ?>
+                <a href="dashboard.php" class="btn btn-primary btn-lg">
+                    <i class="bi bi-speedometer2"></i> Open Dashboard
+                </a>
+                <a href="add-expense.php" class="btn btn-outline btn-lg">
+                    <i class="bi bi-plus-circle"></i> Log an Expense
+                </a>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In / 1-Click Demo
+                </a>
+                <a href="register.php" class="btn btn-outline btn-lg">
+                    <i class="bi bi-person-plus"></i> Create Free Account
+                </a>
+            <?php endif; ?>
         </div>
 
         <!-- Hero Live Preview Cards -->

@@ -109,6 +109,24 @@ try {
             $pdo->exec($sql);
         }
     }
+
+    // Ensure users table exists for authentication
+    $checkUsers = $pdo->query("SHOW TABLES LIKE 'users'")->fetch();
+    if (!$checkUsers) {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS `users` (
+                `id` INT AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(100) NOT NULL,
+                `email` VARCHAR(150) NOT NULL UNIQUE,
+                `password` VARCHAR(255) NOT NULL,
+                `avatar` VARCHAR(255) DEFAULT NULL,
+                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
+            (1, 'Rahul Sharma', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
+            ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `password` = VALUES(`password`);
+        ");
+    }
 } catch (PDOException $ex) {
     // Non-fatal if tables already exist or permissions are restricted
     error_log("Schema auto-init check: " . $ex->getMessage());

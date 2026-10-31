@@ -16,7 +16,15 @@ This guide provides step-by-step instructions to deploy and publish **PocketPilo
 
 ## ⚡ Zero-Configuration Auto-Installer
 PocketPilot is engineered with an **automatic database installer**:
-When you deploy the site and connect your database credentials, **PocketPilot will automatically create all 6 tables and populate the initial Rupee seed data** on your very first page load! You don't even have to manually import `database.sql` unless your host restricts table creation.
+When you deploy the site and connect your database credentials, **PocketPilot will automatically create all tables, authentication schemas, and populate the initial Rupee seed data** on your very first page load! You don't even have to manually import `database.sql` unless your host restricts table creation.
+
+### 🔑 Default Student Login Credentials
+Anyone visiting your live site can log in immediately:
+- **Instant Access**: Click the **"1-Click Student Demo Login"** button on the sign-in page.
+- **Manual Credentials**:
+  - Email: `student@pocketpilot.com`
+  - Password: `password123`
+- **Self-Registration**: Anyone can also click **"Create Free Account"** (`register.php`) to sign up with their personal or university email!
 
 ---
 
@@ -160,3 +168,4 @@ Before sharing your public URL, verify these items:
 
 ### "Changes not saving or permission error"
 - Ensure the web server has read/write permissions on the application folder (`chmod 755` for directories, `chmod 644` for files).
+

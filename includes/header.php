@@ -96,11 +96,28 @@ $pageTitle = isset($pageTitle) ? $pageTitle . " — " . APP_NAME : APP_NAME . " 
                     </li>
                 </ul>
 
-                <!-- Header CTA Button -->
+                <!-- Header User & Actions -->
                 <div class="nav-actions">
-                    <a href="add-expense.php" class="btn btn-primary btn-sm nav-cta">
-                        <i class="bi bi-plus-lg"></i> <span>Quick Expense</span>
-                    </a>
+                    <?php if (is_logged_in()): ?>
+                        <?php $currentUser = current_user(); ?>
+                        <div class="user-pill" title="Signed in as <?= htmlspecialchars($currentUser['email']) ?>">
+                            <span class="user-avatar"><i class="bi bi-person-fill"></i></span>
+                            <span class="user-name"><?= htmlspecialchars($currentUser['name']) ?></span>
+                        </div>
+                        <a href="add-expense.php" class="btn btn-primary btn-sm nav-cta">
+                            <i class="bi bi-plus-lg"></i> <span>Quick Expense</span>
+                        </a>
+                        <a href="logout.php" class="btn btn-outline btn-sm nav-logout" title="Sign out of PocketPilot">
+                            <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+                        </a>
+                    <?php else: ?>
+                        <a href="login.php" class="btn btn-outline btn-sm nav-login">
+                            <i class="bi bi-box-arrow-in-right"></i> <span>Log In</span>
+                        </a>
+                        <a href="register.php" class="btn btn-primary btn-sm nav-cta">
+                            <i class="bi bi-person-plus"></i> <span>Sign Up</span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </nav>
         </div>

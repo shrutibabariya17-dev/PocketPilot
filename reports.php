@@ -1,5 +1,9 @@
 <?php
 // reports.php - Student Financial Reports & Visual Visualizations
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_login();
+
 $pageTitle = "Financial Reports";
 require_once __DIR__ . '/includes/header.php';
 

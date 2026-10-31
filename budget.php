@@ -2,6 +2,7 @@
 // budget.php - Student Budget Planner & Overspending Warnings
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/functions.php';
+require_login();
 
 $selectedMonth = sanitize($_GET['month'] ?? CURRENT_MONTH);
 $errors = [];

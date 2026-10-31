@@ -214,3 +214,59 @@ function get_budget_status($pdo, $month) {
     ];
 }
 
+/**
+ * Check if a user is currently logged in
+ */
+function is_logged_in() {
+    return !empty($_SESSION['user_id']);
+}
+
+/**
+ * Retrieve current logged in user details
+ */
+function current_user() {
+    if (!is_logged_in()) {
+        return null;
+    }
+    return [
+        'id' => $_SESSION['user_id'],
+        'name' => $_SESSION['user_name'] ?? 'Student',
+        'email' => $_SESSION['user_email'] ?? ''
+    ];
+}
+
+/**
+ * Log in a user by saving their details to session
+ */
+function login_user($user) {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
+    $_SESSION['user_id'] = (int)$user['id'];
+    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_email'] = $user['email'];
+}
+
+/**
+ * Log out current user
+ */
+function logout_user() {
+    unset($_SESSION['user_id'], $_SESSION['user_name'], $_SESSION['user_email']);
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
+}
+
+/**
+ * Require authentication for private pages
+ */
+function require_login($redirectUrl = null) {
+    if (!is_logged_in()) {
+        $target = $redirectUrl ?: basename($_SERVER['REQUEST_URI'] ?? 'dashboard.php');
+        set_flash('info', 'Please sign in to access your finances. (You can use the 1-Click Demo Login!)');
+        header("Location: login.php?redirect=" . urlencode($target));
+        exit;
+    }
+}
+
+

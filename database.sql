@@ -70,6 +70,21 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 7. Users Table (Authentication)
+CREATE TABLE IF NOT EXISTS `users` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(150) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `avatar` VARCHAR(255) DEFAULT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Seed default demo student account (password: password123)
+INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
+(1, 'Rahul Sharma', 'student@pocketpilot.com', '$2y$10$HidVwGe4quVBHxSlr/eyCetdbINgLsRb6eQtEnv0iU2WPe/OYSCIm')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `password` = VALUES(`password`);
+
 -- Clear and seed default categories
 TRUNCATE TABLE `categories`;
 

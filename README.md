@@ -17,6 +17,15 @@ PocketPilot is a modern, responsive personal finance and budgeting web applicati
 9. **Student Money Tips (`tips.php`)**: Curated college financial hacks, the 50/30/20 rule, campus discounts guide, meal prep strategies, monthly financial checklist, and an **interactive JavaScript budget calculator**.
 10. **About & Contact (`about.php`)**: Mission statement, technology stack breakdown (HTML5, CSS3, JS, PHP, MySQL), project FAQ, and a **fully functional contact form with server-side validation** saving messages to the database.
 
+### 🔐 Authentication System (Login & Registration)
+- **Student Login (`login.php`)**: Secure sign-in supporting both standard email/password authentication and **1-Click Instant Demo Access** so anyone can test and experience the full application in one click.
+- **Student Sign Up (`register.php`)**: Full registration with secure password hashing (`bcrypt`), email uniqueness validation, and instant session start.
+- **Sign Out (`logout.php`)**: Safe session cleanup and notification.
+- **Default Demo Credentials**:
+  - Email: `student@pocketpilot.com`
+  - Password: `password123`
+  - *(Or simply click the "1-Click Student Demo Login" button on `login.php`)*
+
 ---
 
 ## 🚀 How to Run Locally

@@ -87,3 +87,4 @@ You **do not** need to manually import `database.sql`! PocketPilot includes an *
    - Signed cryptographic cookie ensures users stay logged in across serverless container cold-starts.
 4. **`.vercelignore`**:
    - Excludes local build tools, `.bat` files, and `.git` artifacts to keep deployment fast and lightweight.
+
